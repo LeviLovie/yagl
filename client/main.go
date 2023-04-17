@@ -56,8 +56,6 @@ func main() {
 			continue
 		}
 
-		fmt.Println("Request accepted from: \033[34m" + conn.RemoteAddr().String() + "\033[0m")
-
 		buffer := make([]byte, 1024)
 		n, err := conn.Read(buffer)
 		if err != nil {

@@ -20,10 +20,9 @@ func send(where, what string) {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
 
-	// Send the request as a single line
 	fmt.Fprintf(conn, "%s\n", what)
+	conn.Close()
 }
 
 func input(input, sender string) {
@@ -44,7 +43,7 @@ func input(input, sender string) {
 			fmt.Println("Sending time")
 			now := time.Now()
 			isoTime := now.Format(time.RFC3339)
-			send(sender, "get:time:"+isoTime)
+			send(sender, "get:time:\033[34m"+isoTime+"\033[0m")
 		}
 	}
 
@@ -87,7 +86,6 @@ func main() {
 		}
 
 		fmt.Println("Request accepted from: \033[34m" + conn.RemoteAddr().String() + "\033[0m")
-		fmt.Println("test")
 
 		buffer := make([]byte, 1024)
 		n, err := conn.Read(buffer)
