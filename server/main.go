@@ -83,7 +83,7 @@ func input(input, sender string) {
 			fmt.Println("Sending time")
 			now := time.Now()
 			isoTime := now.Format(time.RFC3339)
-			send(sender, "\033[32mget\033[0m:\033[34mtime\033[0m:"+isoTime+"\033[0m")
+			send(sender, "\033[32mget\033[0m:\033[34mtime\033[0m:\033[33m"+isoTime+"\033[0m")
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		} else if req.Data == "ip" {
 			fmt.Println("Sending IP")
@@ -91,7 +91,7 @@ func input(input, sender string) {
 			if ip == "" {
 				send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[31mCan't get IP\033[0m")
 			}
-			send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:"+getIP()+"\033[0m")
+			send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[33m"+getIP()+"\033[0m")
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		}
 	}
@@ -108,7 +108,8 @@ func input(input, sender string) {
 		scanner := bufio.NewScanner(file)
 		var i int
 		for scanner.Scan() {
-			send(sender, "\033[32mfget\033[0m:"+strconv.Itoa(i)+":"+scanner.Text())
+			send(sender, "\033[32mfget\033[0m:\033[34m"+strconv.Itoa(i)+"\033[0m:\033[33m"+scanner.Text()+"\033[0m")
+			i++
 		}
 		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m")
 	}

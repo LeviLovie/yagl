@@ -1,1 +1,1 @@
-{"type": "get", "data": "time"}
+{"type": "fget", "data": "/opt/test.txt"}
