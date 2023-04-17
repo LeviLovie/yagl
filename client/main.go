@@ -36,7 +36,13 @@ func main() {
 	fmt.Fprintf(conn, "%s\n", request)
 	fmt.Println("Request sent successfully!")
 
-	listener, err := net.Listen("tcp", ":"+port)
+	localAddr := conn.LocalAddr().String()
+	_, localPort, err := net.SplitHostPort(localAddr)
+	if err != nil {
+		panic(err)
+	}
+
+	listener, err := net.Listen("tcp", ":"+localPort)
 	if err != nil {
 		panic(err)
 	}
