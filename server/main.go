@@ -60,7 +60,7 @@ func input(input, sender string) {
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
 
-		send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m")
+		send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m:")
 		cmd := exec.Command(req.Data)
 		err := cmd.Start()
 		if err != nil {
@@ -75,7 +75,7 @@ func input(input, sender string) {
 		}
 
 		fmt.Println("Binary completed successfully")
-		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m")
+		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
 	}
 
 	if req.Type == "get" {
@@ -104,23 +104,29 @@ func input(input, sender string) {
 		}
 		defer file.Close()
 
-		send(sender, "\033[32mfget\033[0m:\033[34mok\033[0m")
+		send(sender, "\033[32mfget\033[0m:\033[34mok\033[0m:")
 		scanner := bufio.NewScanner(file)
 		var i int
 		for scanner.Scan() {
 			send(sender, "\033[32mfget\033[0m:\033[34m"+strconv.Itoa(i)+"\033[0m:\033[33m"+scanner.Text()+"\033[0m")
 			i++
 		}
-		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m")
+		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
 	}
 
 	send(sender, "done")
 }
 
 func main() {
-	fmt.Print("Please enter the port number you want to listen on: ")
+	args := os.Args[1:]
 	var port string
-	fmt.Scanln(&port)
+	if len(args) == 0 {
+		fmt.Println("Please specify a port number")
+		return
+	} else {
+		fmt.Println("Listening on port: \033[34m" + args[0] + "\033[0m")
+		port = args[0]
+	}
 
 	listener, err := net.Listen("tcp", ":"+port)
 	if err != nil {
