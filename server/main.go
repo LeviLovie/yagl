@@ -17,8 +17,8 @@ func input(input string) {
 	var req request
 	err := json.Unmarshal([]byte(input), &req)
 	if err != nil {
-		fmt.Println("\033[31mCan't unmarshal request:", err.Error()+"\033[0m")
-		fmt.Println("Request: " + input)
+		fmt.Println("\033[31mCan't unmarshal request:", err.Error())
+		fmt.Println("Request: " + input + "\033[0m")
 		return
 	}
 
@@ -40,6 +40,7 @@ func main() {
 
 	var inputString string
 	for {
+		fmt.Println()
 		conn, err := listener.Accept()
 		if err != nil {
 			fmt.Println("Error accepting connection:", err.Error())
