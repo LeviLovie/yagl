@@ -28,7 +28,7 @@ func main() {
 			continue
 		}
 
-		fmt.Print("Request accepted from: Esc[1m " + conn.RemoteAddr().String() + "Esc[0m")
+		fmt.Print("Request accepted from: \033[34m" + conn.RemoteAddr().String() + "\033[0m")
 
 		buffer := make([]byte, 1024)
 		n, err := conn.Read(buffer)
