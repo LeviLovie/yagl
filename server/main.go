@@ -41,9 +41,11 @@ func input(input, sender string) {
 	if req.Type == "get" {
 		if req.Data == "time" {
 			fmt.Println("Sending time")
+			send(sender, "get:ok")
 			now := time.Now()
 			isoTime := now.Format(time.RFC3339)
 			send(sender, "get:time:\033[34m"+isoTime+"\033[0m")
+			send(sender, "get:done")
 		}
 	}
 
@@ -64,7 +66,7 @@ func input(input, sender string) {
 		send(sender, "fget:done")
 	}
 
-	send(sender, "%s")
+	send(sender, "done")
 }
 
 func main() {
