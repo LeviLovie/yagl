@@ -1,12 +1,30 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 )
 
-func input(input string) {
+type request struct {
+	Sender string `json:"sender"`
+	Time   string `json:"time"`
+	Type   string `json:"type"`
+	Data   string `json:"data"`
+}
 
+func input(input string) {
+	var req request
+	err := json.Unmarshal([]byte(input), &req)
+	if err != nil {
+		fmt.Println("Can't unmarshal request:", err.Error())
+		fmt.Println("Request: " + input)
+		return
+	}
+
+	if req.Type == "run" {
+		fmt.Println("Running command: " + req.Data)
+	}
 }
 
 func main() {
@@ -41,5 +59,6 @@ func main() {
 		input(inputString)
 
 		conn.Close()
+		fmt.Println()
 	}
 }
