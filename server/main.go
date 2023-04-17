@@ -41,11 +41,11 @@ func input(input, sender string) {
 	if req.Type == "get" {
 		if req.Data == "time" {
 			fmt.Println("Sending time")
-			send(sender, "\033[32mget\033[0m:ok")
+			send(sender, "\033[32mget\033[0m:\033[34mok\033[0m:")
 			now := time.Now()
 			isoTime := now.Format(time.RFC3339)
-			send(sender, "\033[32mget\033[0m:time:\033[34m"+isoTime+"\033[0m")
-			send(sender, "\033[32mget\033[0m:done")
+			send(sender, "\033[32mget\033[0m:\033[34mtime\033[0m:"+isoTime+"\033[0m")
+			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		}
 	}
 
@@ -53,17 +53,17 @@ func input(input, sender string) {
 		fmt.Println("Sending file: " + req.Data)
 		file, err := os.Open(req.Data)
 		if err != nil {
-			send(sender, "\033[32mfget\033[0m:err:"+err.Error())
+			send(sender, "\033[32mfget\033[0m:\033[34merr:"+err.Error())
 		}
 		defer file.Close()
 
-		send(sender, "\033[32mfget\033[0m:ok")
+		send(sender, "\033[32mfget\033[0m:\033[34mok")
 		scanner := bufio.NewScanner(file)
 		var i int
 		for scanner.Scan() {
 			send(sender, "\033[32mfget\033[0m:"+strconv.Itoa(i)+":"+scanner.Text())
 		}
-		send(sender, "\033[32mfget\033[0m:done")
+		send(sender, "\033[32mfget\033[0m:\033[34mdone")
 	}
 
 	send(sender, "done")
