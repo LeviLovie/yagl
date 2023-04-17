@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/exec"
 	"strconv"
 	"time"
 )
@@ -25,26 +26,72 @@ func send(where, what string) {
 	conn.Close()
 }
 
+func getIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return ""
+	}
+
+	for _, addr := range addrs {
+		// Check if the address is not a loopback address and is IPv4 or IPv6
+		if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
+			} else if ipnet.IP.To16() != nil {
+				return ipnet.IP.String()
+			}
+		}
+	}
+
+	return ""
+}
+
 func input(input, sender string) {
 	var req request
 	err := json.Unmarshal([]byte(input), &req)
 	if err != nil {
 		fmt.Println("\033[31mCan't unmarshal request:", err.Error())
 		fmt.Println("Request: " + input + "\033[0m")
+		send(sender, "\033[31mCan't understand request\033[0m")
 		return
 	}
 
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
+
+		send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m")
+		cmd := exec.Command(req.Data)
+		err := cmd.Start()
+		if err != nil {
+			send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m:\033[31m"+err.Error()+"\033[0m")
+			return
+		}
+
+		err = cmd.Wait()
+		if err != nil {
+			send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m:\033[31m"+err.Error()+"\033[0m")
+			return
+		}
+
+		fmt.Println("Binary completed successfully")
+		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m")
 	}
 
 	if req.Type == "get" {
 		if req.Data == "time" {
 			fmt.Println("Sending time")
-			send(sender, "\033[32mget\033[0m:\033[34mok\033[0m:")
 			now := time.Now()
 			isoTime := now.Format(time.RFC3339)
 			send(sender, "\033[32mget\033[0m:\033[34mtime\033[0m:"+isoTime+"\033[0m")
+			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
+		} else if req.Data == "ip" {
+			fmt.Println("Sending IP")
+			ip := getIP()
+			if ip == "" {
+				send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[31mCan't get IP\033[0m")
+			}
+			send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:"+getIP()+"\033[0m")
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		}
 	}
@@ -53,17 +100,17 @@ func input(input, sender string) {
 		fmt.Println("Sending file: " + req.Data)
 		file, err := os.Open(req.Data)
 		if err != nil {
-			send(sender, "\033[32mfget\033[0m:\033[34merr:"+err.Error())
+			send(sender, "\033[32mfget\033[0m:\033[34merr\033[0m:"+err.Error())
 		}
 		defer file.Close()
 
-		send(sender, "\033[32mfget\033[0m:\033[34mok")
+		send(sender, "\033[32mfget\033[0m:\033[34mok\033[0m")
 		scanner := bufio.NewScanner(file)
 		var i int
 		for scanner.Scan() {
 			send(sender, "\033[32mfget\033[0m:"+strconv.Itoa(i)+":"+scanner.Text())
 		}
-		send(sender, "\033[32mfget\033[0m:\033[34mdone")
+		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m")
 	}
 
 	send(sender, "done")
