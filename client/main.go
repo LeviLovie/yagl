@@ -36,6 +36,7 @@ func main() {
 	fmt.Fprintf(conn, "%s\n", request)
 	fmt.Println("Request sent successfully!")
 
+	fmt.Println()
 	localAddr := conn.LocalAddr().String()
 	_, localPort, err := net.SplitHostPort(localAddr)
 	if err != nil {
@@ -50,7 +51,6 @@ func main() {
 
 	var exit bool
 	for !exit {
-		fmt.Println()
 		conn, err := listener.Accept()
 		if err != nil {
 			fmt.Println("Error accepting connection:", err.Error())
@@ -66,9 +66,9 @@ func main() {
 
 		conn.Close()
 
-		if string(buffer[:n]) == "done" {
+		if string(buffer[:n]) == "done\n" {
 			os.Exit(0)
 		}
-		fmt.Println(string(buffer[:n]))
+		fmt.Print(string(buffer[:n]))
 	}
 }
