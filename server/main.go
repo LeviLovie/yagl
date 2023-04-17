@@ -17,7 +17,7 @@ func input(input string) {
 	var req request
 	err := json.Unmarshal([]byte(input), &req)
 	if err != nil {
-		fmt.Println("\033[31mCan't unmarshal request:\033[0m", err.Error())
+		fmt.Println("\033[31mCan't unmarshal request:", err.Error()+"\033[0m")
 		fmt.Println("Request: " + input)
 		return
 	}
