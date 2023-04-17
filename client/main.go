@@ -66,9 +66,9 @@ func main() {
 
 		conn.Close()
 
-		fmt.Println(string(buffer[:n]))
-		if string(buffer[:n]) == "done" {
-			exit = true
+		if string(buffer[:n]) == "%s" {
+			os.Exit(0)
 		}
+		fmt.Println(string(buffer[:n]))
 	}
 }

@@ -64,7 +64,7 @@ func input(input, sender string) {
 		send(sender, "fget:done")
 	}
 
-	send(sender, "done")
+	send(sender, "%s")
 }
 
 func main() {
