@@ -65,7 +65,7 @@ func main() {
 
 		conn.Close()
 
-		if "end" == string(buffer[:n]) {
+		if ":close" == string(buffer[:n]) {
 			break
 		} else {
 			fmt.Println(string(buffer[:n]))
