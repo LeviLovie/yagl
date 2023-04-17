@@ -48,7 +48,8 @@ func main() {
 	}
 	defer listener.Close()
 
-	for {
+	var exit bool
+	for !exit {
 		fmt.Println()
 		conn, err := listener.Accept()
 		if err != nil {
@@ -65,10 +66,9 @@ func main() {
 
 		conn.Close()
 
-		if ":close" == string(buffer[:n]) {
-			break
-		} else {
-			fmt.Println(string(buffer[:n]))
+		fmt.Println(string(buffer[:n]))
+		if string(buffer[:n]) == "done" {
+			exit = true
 		}
 	}
 }

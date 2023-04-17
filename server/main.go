@@ -62,8 +62,9 @@ func input(input, sender string) {
 			send(sender, "fget:"+strconv.Itoa(i)+":"+scanner.Text())
 		}
 		send(sender, "fget:done")
-		send(sender, ":close")
 	}
+
+	send(sender, "done")
 }
 
 func main() {
