@@ -1,19 +1,32 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"net"
+	"os"
+	"strconv"
+	"time"
 )
 
 type request struct {
-	Sender string `json:"sender"`
-	Time   string `json:"time"`
-	Type   string `json:"type"`
-	Data   string `json:"data"`
+	Type string `json:"type"`
+	Data string `json:"data"`
 }
 
-func input(input string) {
+func send(where, what string) {
+	conn, err := net.Dial("tcp", where)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
+	// Send the request as a single line
+	fmt.Fprintf(conn, "%s\n", what)
+}
+
+func input(input, sender string) {
 	var req request
 	err := json.Unmarshal([]byte(input), &req)
 	if err != nil {
@@ -24,6 +37,32 @@ func input(input string) {
 
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
+	}
+
+	if req.Type == "get" {
+		if req.Data == "time" {
+			fmt.Println("Sending time")
+			now := time.Now()
+			isoTime := now.Format(time.RFC3339)
+			send(sender, "get:time:"+isoTime)
+		}
+	}
+
+	if req.Type == "fget" {
+		fmt.Println("Sending file: " + req.Data)
+		file, err := os.Open(req.Data)
+		if err != nil {
+			send(sender, "fget:err:"+err.Error())
+		}
+		defer file.Close()
+
+		send(sender, "fget:ok")
+		scanner := bufio.NewScanner(file)
+		var i int
+		for scanner.Scan() {
+			send(sender, "fget:"+strconv.Itoa(i)+":"+scanner.Text())
+		}
+		send(sender, "fget:done")
 	}
 }
 
@@ -57,7 +96,7 @@ func main() {
 		}
 
 		inputString = string(buffer[:n])
-		input(inputString)
+		input(inputString, conn.RemoteAddr().String())
 
 		conn.Close()
 	}
