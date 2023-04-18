@@ -68,6 +68,7 @@ func input(input, sender string) {
 		output, err := cmd.Output()
 		if err != nil {
 			send(sender, "\033[32mrun\033[0m:\033[34merr\033[0m:"+err.Error()+"\033[0m")
+			fmt.Println("\033[31mError:", err.Error()+"\033[0m")
 		}
 
 		fmt.Println(string(output))
@@ -92,6 +93,7 @@ func input(input, sender string) {
 			ip := getIP()
 			if ip == "" {
 				send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[31mCan't get IP\033[0m")
+				fmt.Println("\033[31mCan't get IP\033[0m")
 			}
 			send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[33m"+getIP()+"\033[0m")
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
@@ -107,6 +109,7 @@ func input(input, sender string) {
 		file, err := os.Open(req.Data)
 		if err != nil {
 			send(sender, "\033[32mfget\033[0m:\033[34merr\033[0m:"+err.Error())
+			fmt.Println("\033[31mCan't open file:", err.Error()+"\033[0m")
 		}
 		defer file.Close()
 
