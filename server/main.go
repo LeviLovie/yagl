@@ -68,6 +68,7 @@ func input(input, sender string) {
 		if err != nil {
 			send(sender, "\033[32mrun\033[0m:\033[34merr\033[0m:\033[31m"+err.Error()+"\033[0m")
 			fmt.Println("\033[31mError:", err.Error()+"\033[0m")
+			return
 		}
 
 		send(sender, "\033[32mrun\033[0m:\033[34mok\033[0m:")
@@ -109,6 +110,7 @@ func input(input, sender string) {
 		if err != nil {
 			send(sender, "\033[32mfget\033[0m:\033[34merr\033[0m:\033[31m"+err.Error()+"\033[0m")
 			fmt.Println("\033[31mCan't open file:", err.Error()+"\033[0m")
+			return
 		}
 		defer file.Close()
 
@@ -121,8 +123,6 @@ func input(input, sender string) {
 		}
 		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
 	}
-
-	send(sender, "done")
 }
 
 func main() {
@@ -162,6 +162,7 @@ func main() {
 
 		inputString = string(buffer[:n])
 		input(inputString, conn.RemoteAddr().String())
+		send(conn.RemoteAddr().String(), "done")
 
 		conn.Close()
 	}
