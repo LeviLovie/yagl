@@ -70,7 +70,10 @@ func input(input, sender string) {
 		}
 
 		fmt.Println(string(output))
-		send(sender, "\033[32mrun\033[0m:\033[34mout\033[0m:"+string(output)+"\033[0m")
+		result := strings.Split(string(output), "\n")
+		for i, line := range result {
+			send(sender, "\033[32mrun\033[0m:\033[34m"+strconv.Itoa(i)+"\033[0m:"+line+"\033[0m")
+		}
 		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
 	}
 
