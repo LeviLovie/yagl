@@ -107,7 +107,7 @@ func input(input, sender string) {
 		fmt.Println("Sending file: " + req.Data)
 		file, err := os.Open(req.Data)
 		if err != nil {
-			send(sender, "\033[32mfget\033[0m:\033[34merr\033[0m:"+err.Error())
+			send(sender, "\033[32mfget\033[0m:\033[34merr\033[0m:\033[31m"+err.Error()+"\033[0m")
 			fmt.Println("\033[31mCan't open file:", err.Error()+"\033[0m")
 		}
 		defer file.Close()
