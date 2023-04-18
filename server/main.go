@@ -97,8 +97,8 @@ func input(input, sender string) {
 			send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[33m"+getIP()+"\033[0m")
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		} else {
-			fmt.Println("\033[31mUnknown get request: \033[0m" + req.Data)
-			send(sender, "\033[32mget\033[0m:\033[34merr\033[0m:Unknown get request: "+req.Data)
+			fmt.Println("\033[31mUnknown get request: " + req.Data + "\033[0m")
+			send(sender, "\033[32mget\033[0m:\033[34merr\033[0m:\033[31mUnknown get request: "+req.Data+"\033[0m")
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		}
 	}
