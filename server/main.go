@@ -62,7 +62,7 @@ func input(input, sender string) {
 		fmt.Println("Running command: " + req.Data)
 
 		command := strings.SplitN(req.Data, " ", 2)
-		cmd := exec.Command("cd /home/levi/; "+command[0], command[1])
+		cmd := exec.Command(command[0], command[1])
 
 		output, err := cmd.Output()
 		if err != nil {
