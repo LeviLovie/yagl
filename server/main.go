@@ -60,17 +60,17 @@ func input(input, sender string) {
 
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
-		send(sender, "\033[32mrun\033[0m:\033[34mok\033[0m:")
 
 		command := strings.Split(req.Data, " ")
 		cmd := exec.Command(command[0], command[1:]...)
 
 		output, err := cmd.Output()
 		if err != nil {
-			send(sender, "\033[32mrun\033[0m:\033[34merr\033[0m:"+err.Error()+"\033[0m")
+			send(sender, "\033[32mrun\033[0m:\033[34merr\033[0m:\033[31m"+err.Error()+"\033[0m")
 			fmt.Println("\033[31mError:", err.Error()+"\033[0m")
 		}
 
+		send(sender, "\033[32mrun\033[0m:\033[34mok\033[0m:")
 		result := strings.Split(string(output), "\n")
 		for i, line := range result {
 			if line != "" {
