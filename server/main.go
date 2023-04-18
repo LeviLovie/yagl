@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -60,21 +61,16 @@ func input(input, sender string) {
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
 
-		send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m:")
-		cmd := exec.Command(req.Data)
-		err := cmd.Start()
+		command := strings.SplitN(input, " ", 2)
+		cmd := exec.Command(command[0], command[1])
+
+		output, err := cmd.Output()
 		if err != nil {
-			send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m:\033[31m"+err.Error()+"\033[0m")
-			return
+			send(sender, "\033[32mrun\033[0m:\033[34merr\033[0m:"+err.Error()+"\033[0m")
 		}
 
-		err = cmd.Wait()
-		if err != nil {
-			send(sender, "\033[32mrun\033[0m:\033[34mrunning\033[0m:\033[31m"+err.Error()+"\033[0m")
-			return
-		}
-
-		fmt.Println("Binary completed successfully")
+		fmt.Println(string(output))
+		send(sender, "\033[32mrun\033[0m:\033[34mout\033[0m:"+string(output)+"\033[0m")
 		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
 	}
 

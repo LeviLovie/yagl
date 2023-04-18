@@ -45,7 +45,7 @@ func main() {
 	}
 
 	// Connect to the target IP address and port
-	conn, err := net.Dial("tcp", "192.168.1.125:"+port)
+	conn, err := net.Dial("tcp", "192.168.1.127:"+port)
 	if err != nil {
 		panic(err)
 	}
