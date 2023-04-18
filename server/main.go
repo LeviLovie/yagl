@@ -72,7 +72,9 @@ func input(input, sender string) {
 		fmt.Println(string(output))
 		result := strings.Split(string(output), "\n")
 		for i, line := range result {
-			send(sender, "\033[32mrun\033[0m:\033[34m"+strconv.Itoa(i)+"\033[0m:"+line+"\033[0m")
+			if line != "" {
+				send(sender, "\033[32mrun\033[0m:\033[34m"+strconv.Itoa(i)+"\033[0m:\033[33m"+line+"\033[0m")
+			}
 		}
 		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
 	}
