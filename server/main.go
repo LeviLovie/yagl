@@ -60,6 +60,7 @@ func input(input, sender string) {
 
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
+		send(sender, "\033[32mrun\033[0m:\033[34mok\033[0m:")
 
 		command := strings.Split(req.Data, " ")
 		cmd := exec.Command(command[0], command[1:]...)
@@ -76,7 +77,7 @@ func input(input, sender string) {
 				send(sender, "\033[32mrun\033[0m:\033[34m"+strconv.Itoa(i)+"\033[0m:\033[33m"+line+"\033[0m")
 			}
 		}
-		send(sender, "\033[32mfget\033[0m:\033[34mdone\033[0m:")
+		send(sender, "\033[32mrun\033[0m:\033[34mdone\033[0m:")
 	}
 
 	if req.Type == "get" {
