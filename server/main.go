@@ -61,8 +61,7 @@ func input(input, sender string) {
 	if req.Type == "run" {
 		fmt.Println("Running command: " + req.Data)
 
-		command := strings.SplitN(req.Data, " ", 2)
-		fmt.Println("running: " + command[0] + " " + command[1])
+		command := strings.Split(req.Data, " ")
 		cmd := exec.Command(command[0], command[1:]...)
 
 		output, err := cmd.Output()
